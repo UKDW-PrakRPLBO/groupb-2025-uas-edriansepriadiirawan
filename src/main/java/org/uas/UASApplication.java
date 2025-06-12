@@ -84,6 +84,12 @@ public class UASApplication {
         System.out.print("Masukan email user yang akan dihapus: ");
         String email = scanner.nextLine();
 
+        if (userRepository.deleteUser(email)) {
+            System.out.println("User dengan email " + email + " berhasil dihapus.");
+        } else {
+            System.out.println("Gagal menghapus user dengan email " + email + ".");
+        }
+
     }
 
     private void updateUser(Scanner scanner) {
@@ -94,9 +100,24 @@ public class UASApplication {
         String username = scanner.nextLine();
         System.out.print("Masukan password baru: ");
         String password = scanner.nextLine();
+
+        if (userRepository.updateUser(email, username, password)) {
+            System.out.println("User dengan email " + email + " berhasil diupdate.");
+        } else {
+            System.out.println("Gagal mengupdate user dengan email " + email + ".");
+        }
     }
 
     private void tampilkanSemuaUser() {
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            System.out.println("Tidak ada user yang ditemukan.");
+        } else {
+            System.out.println("Email | Username | Password");
+            for (User user : users) {
+                System.out.println(user.getEmail() + " | " + user.getUsername() + " | " + user.getPassword());
+            }
+        }
 
     }
 
@@ -111,6 +132,13 @@ public class UASApplication {
         String username = scanner.nextLine();
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
+
+        if (userRepository.authenticateUser(username, password)) {
+            SessionManager.getInstance().login();
+            System.out.println("Login berhasil mas.");
+        } else {
+            System.out.println("Login failed. username dan password salah mas.");
+        }
     }
 
     private void insertUser(Scanner scanner) {
@@ -121,6 +149,12 @@ public class UASApplication {
         String username = scanner.nextLine();
         System.out.print("Enter password: ");
         String password = scanner.nextLine();
+
+        if (userRepository.insertUser(email, username, password)) {
+            System.out.println("User dengan email mas " + email + " berhasil ditambahkan.");
+        } else {
+            System.out.println("Gagal menambahkan user dengan email mas " + email + ".");
+        }
     }
 
     public static void main(String[] args) {
